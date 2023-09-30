@@ -18,15 +18,22 @@ form.addEventListener('submit', function(event){
 })
 
 async function getCurrentImageOfTheDay(searchDate){
+    if(searchDate==prevImg || searchDate=="") return;
     if(prevImg!=undefined){
            addSearchToHistory(prevImg);
     }
     const imgUrl = `https://api.nasa.gov/planetary/apod?date=${searchDate}&api_key=${apiKey}`;
-    const imgData =  await fetch(imgUrl);
-    const imgDetails = await imgData.json();
-    prevImg = imgDetails.date;
-    saveSearch(imgDetails);
-    getImageOfTheDay(searchDate);
+    try{
+        const imgData =  await fetch(imgUrl);
+        const imgDetails = await imgData.json();
+        prevImg = imgDetails.date;
+        saveSearch(imgDetails);
+        getImageOfTheDay(searchDate);
+    }
+    catch(error){
+           console.log("error in fetching data", error);
+    }
+   
 }
 
 function getImageOfTheDay(currentDate){
